@@ -16,13 +16,13 @@ def speak(text):
 #     client = openAI(api_key="",)
 
 #     completion = client.chat.completions.create(
-#     model="gpt-3.5 turbo",
-#     massage=[
+#     model="gpt-3.5-turbo",
+#     message=[
 #         {"role": "system","content": "you are a virtual assitance named jarvis skilled in general task like alexa and google cloud "},
 #         {"role": "user", "content": command}
 #     ]
 #     )
-#     return completion.choice[0].massage.content
+#     return completion.choices[0].massage.content
 
 def processCommand(c):
     if "open google" in c.lower():
@@ -30,9 +30,9 @@ def processCommand(c):
     elif "open youtube" in c.lower():
         webbrowser.open("https://youtube.com")
     elif "open facebook" in c.lower():
-        webbrower.open("https://facebook.com")
+        webbrowser.open("https://facebook.com")
     elif "open whats up" in c.lower():
-        webbrowser.open("https://whatsup.com")
+        webbrowser.open("https://web.whatsup.com")
     elif "open chat gpt" in c.lower():
         webbrowser.open("https://chatgpt.com")
     elif c.lower().startswith("play"):
@@ -59,7 +59,7 @@ def processCommand(c):
 
 
 if __name__ == "__main__":
-    speak("hey gunjan how may i help you")
+    speak("yes sir, how may i help you")
     while True:
         #listen for wake word "jarvis"
         #obtain audio from microphone
@@ -71,7 +71,7 @@ if __name__ == "__main__":
                 print("listening.....")
                 audio = r.listen(source, timeout = 2, phrase_time_limit = 3)
             command = r.recognize_google(audio)
-            if(command.lower() == "jarvis"):
+            if "jarvis" in command.lower():
                 speak("yes sir")
                 print(command)
                 #listen for command
