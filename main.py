@@ -17,12 +17,12 @@ def speak(text):
 
 #     completion = client.chat.completions.create(
 #     model="gpt-3.5-turbo",
-#     message=[
+#     messages=[
 #         {"role": "system","content": "you are a virtual assitance named jarvis skilled in general task like alexa and google cloud "},
 #         {"role": "user", "content": command}
 #     ]
 #     )
-#     return completion.choices[0].massage.content
+#     return completion.choices[0].message.content
 
 def processCommand(c):
     if "open google" in c.lower():
@@ -31,14 +31,20 @@ def processCommand(c):
         webbrowser.open("https://youtube.com")
     elif "open facebook" in c.lower():
         webbrowser.open("https://facebook.com")
-    elif "open whats up" in c.lower():
-        webbrowser.open("https://web.whatsup.com")
+    elif "open whatsapp" in c.lower():
+        webbrowser.open("https://web.whatsapp.com")
     elif "open chat gpt" in c.lower():
         webbrowser.open("https://chatgpt.com")
     elif c.lower().startswith("play"):
-        song = c.lower().split(" ")[1]
-        link = musicLibrary.music[song]
-        webbrowser.open(link)
+        try:
+            song = c.lower().split(" ",1)[1]
+            link = musicLibrary.music[song]
+            if link:
+                webbrowser.open(link)
+            else:
+                speak(f"this song can't play {song} ")
+        except Exception as e:
+            speak("some error happend")
     elif "news" in c.lower():
         r = requests.get("https://newsapi.org/v2/top-headlines?country=us&apiKey=6276a8e5ccae44febbd47d35b87c0c7b")
         if r.status_code == 200:
@@ -47,9 +53,10 @@ def processCommand(c):
 
             # Extract the artihcle
             articles = data.get('articles', [])
-
+            speak("how many new you want to hear")
+            n = int(command)
             # print the headline
-            for article in articles:
+            for article in articles(n):
                 speak(article['title'])
 
     # else:
@@ -63,7 +70,7 @@ if __name__ == "__main__":
     while True:
         #listen for wake word "jarvis"
         #obtain audio from microphone
-        r = sr.Recognizer()
+        r = recognizer()
             
         #recognize speech using google
         try:
@@ -82,4 +89,5 @@ if __name__ == "__main__":
 
                     processCommand(command)
         except Exception as e:
-            print(" jarvis error, {0}".format(e))
+            print(f"jarvis error: {e}")
+            speak("i did not here that can you say that again")
