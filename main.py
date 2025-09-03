@@ -1,9 +1,9 @@
 import speech_recognition as sr
 import webbrowser
 import pyttsx3
-import musicLibrary
+import pywhatkit
 import requests
-
+import datetime 
 recognizer = sr.Recognizer()
 engine = pyttsx3.init()
 newsApi = "6276a8e5ccae44febbd47d35b87c0c7b"
@@ -24,6 +24,19 @@ def speak(text):
 #     )
 #     return completion.choices[0].message.content
 
+def timeDate(c):
+    # it will tell time 
+    if "time" in c.lower():
+        time = datetime.datetime.now()
+        current_time = time.strftime("%I:%M %p")
+        speak(f"current time is {current_time}")
+    
+    elif "date" in c.lower():
+        # it will tell date
+        date = datetime.datetime.now()
+        current_date = date.strftime("%B %d, %y")
+        speak(f"today's date is {current_date}")
+
 def processCommand(c):
     if "open google" in c.lower():
         webbrowser.open("https://google.com")
@@ -38,11 +51,9 @@ def processCommand(c):
     elif c.lower().startswith("play"):
         try:
             song = c.lower().split(" ",1)[1]
-            link = musicLibrary.music[song]
-            if link:
-                webbrowser.open(link)
-            else:
-                speak(f"this song can't play {song} ")
+            pywhatkit.playonyt(song)  #plays top result
+            speak(f"playing {song} on youtube ")
+            
         except Exception as e:
             speak("some error happend")
     elif "news" in c.lower():
@@ -56,8 +67,16 @@ def processCommand(c):
             speak("how many new you want to hear")
             n = int(command)
             # print the headline
-            for article in articles(n):
+            for article in articles[:n]:
                 speak(article['title'])
+            else:
+                speak("i couldn't find news ")
+
+    elif "time" in c.lower() or "date" in c.lower():
+        timeDate(c)
+
+    else:
+        speak("i don't understand this command")
 
     # else:
     #     # Let openAi handle this
@@ -70,7 +89,7 @@ if __name__ == "__main__":
     while True:
         #listen for wake word "jarvis"
         #obtain audio from microphone
-        r = recognizer()
+        r = recognizer
             
         #recognize speech using google
         try:
