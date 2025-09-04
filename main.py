@@ -48,6 +48,17 @@ def processCommand(c):
         webbrowser.open("https://web.whatsapp.com")
     elif "open chat gpt" in c.lower():
         webbrowser.open("https://chatgpt.com")
+
+    elif c.lower().startswith("open"):
+        try:
+            website = c.lower().split(" ",1)[1].strip()
+            webbrowser.open(f"https://{website}.com")
+            speak(f"opening {website}")
+        except Exception as e:
+            speak("can't open this site right now")
+
+
+
     elif c.lower().startswith("play"):
         try:
             song = c.lower().split(" ",1)[1]
@@ -64,10 +75,8 @@ def processCommand(c):
 
             # Extract the artihcle
             articles = data.get('articles', [])
-            speak("how many new you want to hear")
-            n = int(command)
             # print the headline
-            for article in articles[:n]:
+            for article in articles:
                 speak(article['title'])
             else:
                 speak("i couldn't find news ")
